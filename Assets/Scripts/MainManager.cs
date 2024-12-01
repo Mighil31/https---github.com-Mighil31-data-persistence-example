@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,6 +13,8 @@ public class MainManager : MonoBehaviour
 
     public Text ScoreText;
     public GameObject GameOverText;
+    public Text PlayerDetailsText;
+    public string playerName;
     
     private bool m_Started = false;
     private int m_Points;
@@ -24,7 +27,7 @@ public class MainManager : MonoBehaviour
     {
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
-        
+        PlayerDetailsText.text = "Player: " + Persistance.Instance.playerName + " High Score: " + Persistance.Instance.highScore;
         int[] pointCountArray = new [] {1,1,2,2,5,5};
         for (int i = 0; i < LineCount; ++i)
         {
@@ -70,6 +73,9 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        Persistance.Instance.highScore = m_Points;
+        Persistance.Instance.highScorePlayerName = Persistance.Instance.playerName;
+        Persistance.Instance.SaveDataToFile();
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
